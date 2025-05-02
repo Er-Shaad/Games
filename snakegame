@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            touch-action: none;
+        }
+
+        #game-container {
+            position: relative;
+        }
+
+        #game-canvas {
+            background-color: #000;
+            border: 3px solid #333;
+            border-radius: 5px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        #score-display {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        #controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .control-row {
+            display: flex;
+            justify-content: center;
+        }
+
+        .control-btn {
+            width: 60px;
+            height: 60px;
+            margin: 5px;
+            font-size: 24px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .control-btn:active {
+            background-color: #45a049;
+        }
+
+        #game-over {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            display: none;
+        }
+
+        #restart-btn {
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        @media (max-width: 600px) {
+            .control-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="score-display">Score: 0</div>
+    <div id="game-container">
+        <canvas id="game-canvas" width="400" height="400"></canvas>
+        <div id="game-over">
+            <h2>Game Over!</h2>
+            <p id="final-score">Your score: 0</p>
+            <button id="restart-btn">Play Again</button>
+        </div>
+    </div>
+    <div id="controls">
+        <div class="control-row">
+            <button class="control-btn" id="up-btn">↑</button>
+        </div>
+        <div class="control-row">
+            <button class="control-btn" id="left-btn">←</button>
+            <button class="control-btn" id="down-btn">↓</button>
+            <button class="control-btn" id="right-btn">→</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const canvas = document.getElementById('game-canvas');
+            const ctx = canvas.getContext('2d');
+            const scoreDisplay = document.getElementById('score-display');
+            const gameOverDisplay = document.getElementById('game-over');
+            const finalScoreDisplay = document.getElementById('final-score');
+            const restartBtn = document.getElementById('restart-btn');
+            
+            // Control buttons
+            const upBtn = document.getElementById('up-btn');
+            const downBtn = document.getElementById('down-btn');
+            const leftBtn = document.getElementById('left-btn');
+            const rightBtn = document.getElementById('right-btn');
+
+            // Game settings
+            const gridSize = 20;
+            const tileCount = canvas.width / gridSize;
+            let speed = 7; // Initial speed
+
+            // Game variables
+            let snake = [];
+            let food = {};
+            let direction = 'right';
+            let nextDirection = 'right';
+            let score = 0;
+            let gameRunning = false;
+            let gameLoop;
+
+            // Initialize game
+            function initGame() {
+                // Create initial snake (3 segments)
+                snake = [
+                    {x: 5, y: 10},
+                    {x: 4, y: 10},
+                    {x: 3, y: 10}
+                ];
+                
+                // Place first food
+                placeFood();
+                
+                // Reset game state
+                direction = 'right';
+                nextDirection = 'right';
+                score = 0;
+                scoreDisplay.textContent = `Score: ${score}`;
+                gameRunning = true;
+                gameOverDisplay.style.display = 'none';
+                
+                // Adjust canvas size for mobile if needed
+                adjustCanvasSize();
+            }
+
+            // Adjust canvas size for mobile devices
+            function adjustCanvasSize() {
+                const maxWidth = window.innerWidth - 40;
+                const maxHeight = window.innerHeight - 200;
+                const size = Math.min(400, maxWidth, maxHeight);
+                
+                canvas.width = size;
+                canvas.height = size;
+            }
+
+            // Place food at random position
+            function placeFood() {
+                food = {
+                    x: Math.floor(Math.random() * tileCount),
+                    y: Math.floor(Math.random() * tileCount)
+                };
+                
+                // Make sure food doesn't appear on snake
+                for (let segment of snake) {
+                    if (segment.x === food.x && segment.y === food.y) {
+                        return placeFood();
+                    }
+                }
+            }
+
+            // Main game loop
+            function gameUpdate() {
+                if (!gameRunning) return;
+                
+                // Set the new direction
+                direction = nextDirection;
+                
+                // Calculate new head position
+                const head = {x: snake[0].x, y: snake[0].y};
+                
+                switch (direction) {
+                    case 'up':
+                        head.y--;
+                        break;
+                    case 'down':
+                        head.y++;
+                        break;
+                    case 'left':
+                        head.x--;
+                        break;
+                    case 'right':
+                        head.x++;
+                        break;
+                }
+                
+                // Check for collisions
+                if (
+                    head.x < 0 || head.y < 0 || 
+                    head.x >= tileCount || head.y >= tileCount ||
+                    checkCollision(head.x, head.y)
+                ) {
+                    gameOver();
+                    return;
+                }
+                
+                // Add new head
+                snake.unshift(head);
+                
+                // Check if snake ate food
+                if (head.x === food.x && head.y === food.y) {
+                    score++;
+                    scoreDisplay.textContent = `Score: ${score}`;
+                    
+                    // Increase speed every 5 points
+                    if (score % 5 === 0) {
+                        speed += 0.5;
+                    }
+                    
+                    placeFood();
+                } else {
+                    // Remove tail if no food was eaten
+                    snake.pop();
+                }
+                
+                // Draw everything
+                drawGame();
+            }
+
+            // Check for collision with snake body
+            function checkCollision(x, y) {
+                for (let segment of snake) {
+                    if (segment.x === x && segment.y === y) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            // Draw game elements
+            function drawGame() {
+                // Clear canvas
+                ctx.fillStyle = 'black';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw snake
+                ctx.fillStyle = 'lime';
+                for (let segment of snake) {
+                    ctx.fillRect(
+                        segment.x * gridSize, 
+                        segment.y * gridSize, 
+                        gridSize - 1, 
+                        gridSize - 1
+                    );
+                }
+                
+                // Draw head differently
+                ctx.fillStyle = 'green';
+                ctx.fillRect(
+                    snake[0].x * gridSize, 
+                    snake[0].y * gridSize, 
+                    gridSize - 1, 
+                    gridSize - 1
+                );
+                
+                // Draw food
+                ctx.fillStyle = 'red';
+                ctx.fillRect(
+                    food.x * gridSize, 
+                    food.y * gridSize, 
+                    gridSize - 1, 
+                    gridSize - 1
+                );
+            }
+
+            // Game over function
+            function gameOver() {
+                gameRunning = false;
+                finalScoreDisplay.textContent = `Your score: ${score}`;
+                gameOverDisplay.style.display = 'block';
+                clearInterval(gameLoop);
+            }
+
+            // Keyboard controls
+            document.addEventListener('keydown', (e) => {
+                switch(e.key) {
+                    case 'ArrowUp':
+                        if (direction !== 'down') nextDirection = 'up';
+                        break;
+                    case 'ArrowDown':
+                        if (direction !== 'up') nextDirection = 'down';
+                        break;
+                    case 'ArrowLeft':
+                        if (direction !== 'right') nextDirection = 'left';
+                        break;
+                    case 'ArrowRight':
+                        if (direction !== 'left') nextDirection = 'right';
+                        break;
+                }
+            });
+
+            // Touch controls for mobile
+            let touchStartX = 0;
+            let touchStartY = 0;
+
+            canvas.addEventListener('touchstart', (e) => {
+                touchStartX = e.touches[0].clientX;
+                touchStartY = e.touches[0].clientY;
+                e.preventDefault();
+            }, false);
+
+            canvas.addEventListener('touchmove', (e) => {
+                if (!touchStartX || !touchStartY) return;
+                
+                const touchEndX = e.touches[0].clientX;
+                const touchEndY = e.touches[0].clientY;
+                
+                const dx = touchEndX - touchStartX;
+                const dy = touchEndY - touchStartY;
+                
+                // Determine swipe direction
+                if (Math.abs(dx) > Math.abs(dy)) {
+                    if (dx > 0 && direction !== 'left') nextDirection = 'right';
+                    else if (dx < 0 && direction !== 'right') nextDirection = 'left';
+                } else {
+                    if (dy > 0 && direction !== 'up') nextDirection = 'down';
+                    else if (dy < 0 && direction !== 'down') nextDirection = 'up';
+                }
+                
+                e.preventDefault();
+            }, false);
+
+            // Button controls
+            upBtn.addEventListener('click', () => {
+                if (direction !== 'down') nextDirection = 'up';
+            });
+            
+            downBtn.addEventListener('click', () => {
+                if (direction !== 'up') nextDirection = 'down';
+            });
+            
+            leftBtn.addEventListener('click', () => {
+                if (direction !== 'right') nextDirection = 'left';
+            });
+            
+            rightBtn.addEventListener('click', () => {
+                if (direction !== 'left') nextDirection = 'right';
+            });
+
+            // Restart button
+            restartBtn.addEventListener('click', () => {
+                initGame();
+                gameLoop = setInterval(gameUpdate, 1000 / speed);
+            });
+
+            // Handle window resize
+            window.addEventListener('resize', adjustCanvasSize);
+
+            // Start the game
+            initGame();
+            gameLoop = setInterval(gameUpdate, 1000 / speed);
+        });
+    </script>
+</body>
+</html>
