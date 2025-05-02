@@ -3,717 +3,186 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Hub - Play Free Online Games</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>My Game Collection</title>
     <style>
-        :root {
-            --primary-color: #4a6bff;
-            --secondary-color: #ff6b6b;
-            --dark-color: #2c3e50;
-            --light-color: #f8f9fa;
-            --success-color: #28a745;
-            --warning-color: #ffc107;
-            --info-color: #17a2b8;
-        }
-
+        /* Basic Reset */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Arial', sans-serif;
         }
-
+        
         body {
-            background-color: #f5f7fa;
+            background-color: #f5f5f5;
             color: #333;
             line-height: 1.6;
         }
-
+        
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Main Content */
         .container {
-            width: 100%;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 2rem;
         }
-
-        /* Header Styles */
-        header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            padding: 1rem 0;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .header-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-        }
-
-        .logo i {
-            margin-right: 10px;
-        }
-
-        nav ul {
-            display: flex;
-            list-style: none;
-        }
-
-        nav ul li {
-            margin-left: 1.5rem;
-        }
-
-        nav ul li a {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            padding: 0.5rem 0;
-            position: relative;
-        }
-
-        nav ul li a:hover {
-            opacity: 0.8;
-        }
-
-        nav ul li a::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background-color: white;
-            transition: width 0.3s ease;
-        }
-
-        nav ul li a:hover::after {
-            width: 100%;
-        }
-
-        .mobile-menu-btn {
-            display: none;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
-        /* Hero Section */
-        .hero {
-            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
-            background-size: cover;
-            background-position: center;
-            color: white;
-            padding: 5rem 0;
-            text-align: center;
-        }
-
-        .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            max-width: 700px;
-            margin: 0 auto 2rem;
-        }
-
-        .btn {
-            display: inline-block;
-            background-color: var(--primary-color);
-            color: white;
-            padding: 0.8rem 1.5rem;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-            font-size: 1rem;
-        }
-
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .btn-outline {
-            background-color: transparent;
-            border: 2px solid white;
-            margin-left: 1rem;
-        }
-
-        .btn-outline:hover {
-            background-color: white;
-            color: var(--primary-color);
-        }
-
-        /* Games Grid */
-        .games-section {
-            padding: 4rem 0;
-        }
-
-        .section-title {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-
-        .section-title h2 {
-            font-size: 2.5rem;
-            color: var(--dark-color);
-            margin-bottom: 1rem;
-        }
-
-        .section-title p {
-            color: #666;
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
+        
+        /* Game Grid */
         .games-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 2rem;
+            margin-top: 2rem;
         }
-
+        
         .game-card {
-            background-color: white;
+            background: white;
             border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
         }
-
+        
         .game-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            transform: translateY(-5px);
         }
-
+        
         .game-card img {
             width: 100%;
             height: 180px;
             object-fit: cover;
         }
-
-        .game-card-content {
+        
+        .game-info {
             padding: 1.5rem;
         }
-
-        .game-card h3 {
+        
+        .game-info h3 {
             font-size: 1.3rem;
             margin-bottom: 0.5rem;
-            color: var(--dark-color);
+            color: #444;
         }
-
-        .game-card p {
+        
+        .game-info p {
             color: #666;
-            margin-bottom: 1.5rem;
-            font-size: 0.9rem;
-        }
-
-        .game-card .btn {
-            width: 100%;
-            text-align: center;
-        }
-
-        /* Categories */
-        .categories {
-            padding: 2rem 0 4rem;
-            background-color: #f0f2f5;
-        }
-
-        .category-tags {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        .category-tag {
-            padding: 0.5rem 1.2rem;
-            background-color: white;
-            border-radius: 50px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-        }
-
-        .category-tag:hover {
-            background-color: var(--primary-color);
-            color: white;
-        }
-
-        .category-tag.active {
-            background-color: var(--primary-color);
-            color: white;
-        }
-
-        /* Features */
-        .features {
-            padding: 4rem 0;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .feature-card {
-            text-align: center;
-            padding: 2rem;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        }
-
-        .feature-icon {
-            font-size: 2.5rem;
-            color: var(--primary-color);
-            margin-bottom: 1.5rem;
-        }
-
-        .feature-card h3 {
-            font-size: 1.3rem;
             margin-bottom: 1rem;
-            color: var(--dark-color);
+            font-size: 0.9rem;
         }
-
-        .feature-card p {
-            color: #666;
+        
+        .play-btn {
+            display: inline-block;
+            background: #6e8efb;
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.3s;
         }
-
+        
+        .play-btn:hover {
+            background: #5a7df5;
+        }
+        
         /* Footer */
         footer {
-            background-color: var(--dark-color);
-            color: white;
-            padding: 4rem 0 2rem;
-        }
-
-        .footer-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-
-        .footer-column h3 {
-            font-size: 1.2rem;
-            margin-bottom: 1.5rem;
-            position: relative;
-            padding-bottom: 0.5rem;
-        }
-
-        .footer-column h3::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 50px;
-            height: 2px;
-            background-color: var(--primary-color);
-        }
-
-        .footer-column ul {
-            list-style: none;
-        }
-
-        .footer-column ul li {
-            margin-bottom: 0.8rem;
-        }
-
-        .footer-column ul li a {
-            color: #bbb;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .footer-column ul li a:hover {
-            color: white;
-            padding-left: 5px;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .social-links a {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            color: white;
-            transition: all 0.3s ease;
-        }
-
-        .social-links a:hover {
-            background-color: var(--primary-color);
-            transform: translateY(-3px);
-        }
-
-        .copyright {
             text-align: center;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: #bbb;
-            font-size: 0.9rem;
+            padding: 2rem;
+            background: #333;
+            color: white;
+            margin-top: 3rem;
         }
-
-        /* Responsive Styles */
-        @media (max-width: 992px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-        }
-
+        
+        /* Responsive Design */
         @media (max-width: 768px) {
-            .header-container {
-                padding: 0 20px;
+            .games-grid {
+                grid-template-columns: 1fr;
             }
-
-            nav {
-                position: fixed;
-                top: 70px;
-                left: -100%;
-                width: 80%;
-                height: calc(100vh - 70px);
-                background-color: var(--dark-color);
-                transition: all 0.5s ease;
-                z-index: 99;
-            }
-
-            nav.active {
-                left: 0;
-            }
-
-            nav ul {
-                flex-direction: column;
-                padding: 2rem;
-            }
-
-            nav ul li {
-                margin: 1rem 0;
-            }
-
-            .mobile-menu-btn {
-                display: block;
-            }
-
-            .hero {
-                padding: 3rem 0;
-            }
-
-            .hero h1 {
-                font-size: 2rem;
-            }
-
-            .hero p {
-                font-size: 1rem;
-            }
-
-            .btn {
-                padding: 0.7rem 1.2rem;
-                font-size: 0.9rem;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .hero {
-                padding: 2rem 0;
-            }
-
-            .hero h1 {
-                font-size: 1.8rem;
-            }
-
-            .hero-buttons {
-                display: flex;
-                flex-direction: column;
-                gap: 1rem;
-            }
-
-            .btn-outline {
-                margin-left: 0;
-            }
-
-            .section-title h2 {
+            
+            header h1 {
                 font-size: 2rem;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
     <header>
-        <div class="container header-container">
-            <div class="logo">
-                <i class="fas fa-gamepad"></i>
-                <span>GameHub</span>
-            </div>
-            <button class="mobile-menu-btn" id="mobileMenuBtn">
-                <i class="fas fa-bars"></i>
-            </button>
-            <nav id="mainNav">
-                <ul>
-                    <li><a href="#home">Home</a></li>
-                    <li><a href="#games">Games</a></li>
-                    <li><a href="#categories">Categories</a></li>
-                    <li><a href="#features">Features</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
-            </nav>
-        </div>
+        <h1>My Game Collection</h1>
+        <p>Simple, fun games to play in your browser</p>
     </header>
-
-    <!-- Hero Section -->
-    <section class="hero" id="home">
-        <div class="container">
-            <h1>Play Free Online Games</h1>
-            <p>Discover our collection of fun and addictive games that you can play anytime, anywhere. No downloads required!</p>
-            <div class="hero-buttons">
-                <a href="#games" class="btn">Browse Games</a>
-                <a href="#categories" class="btn btn-outline">View Categories</a>
+    
+    <div class="container">
+        <h2>Featured Games</h2>
+        <div class="games-grid">
+            <!-- Snake Game -->
+            <div class="game-card">
+                <img src="https://via.placeholder.com/300x180?text=Snake+Game" alt="Snake Game">
+                <div class="game-info">
+                    <h3>Classic Snake</h3>
+                    <p>Guide the snake to eat food and grow longer without hitting walls or yourself.</p>
+                    <a href="snake.html" class="play-btn">Play Now</a>
+                </div>
             </div>
-        </div>
-    </section>
-
-    <!-- Games Section -->
-    <section class="games-section" id="games">
-        <div class="container">
-            <div class="section-title">
-                <h2>Popular Games</h2>
-                <p>Check out our most played games. New games added regularly!</p>
+            
+            <!-- Tic Tac Toe -->
+            <div class="game-card">
+                <img src="https://via.placeholder.com/300x180?text=Tic+Tac+Toe" alt="Tic Tac Toe">
+                <div class="game-info">
+                    <h3>Tic Tac Toe</h3>
+                    <p>The classic X and O game. Play against a friend or the computer.</p>
+                    <a href="tictactoe.html" class="play-btn">Play Now</a>
+                </div>
             </div>
-            <div class="games-grid">
-                <!-- Game Card 1 -->
-                <div class="game-card">
-                    <img src="https://images.unsplash.com/photo-1551103782-8ab07afd45c1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Snake Game">
-                    <div class="game-card-content">
-                        <h3>Classic Snake</h3>
-                        <p>Relive the nostalgia with this classic snake game. Eat the food and grow as long as possible!</p>
-                        <a href="snake.html" class="btn">Play Now</a>
-                    </div>
+            
+            <!-- Memory Game -->
+            <div class="game-card">
+                <img src="https://via.placeholder.com/300x180?text=Memory+Game" alt="Memory Game">
+                <div class="game-info">
+                    <h3>Memory Match</h3>
+                    <p>Test your memory by matching pairs of cards in this challenging game.</p>
+                    <a href="memory.html" class="play-btn">Play Now</a>
                 </div>
-                
-                <!-- Game Card 2 -->
-                <div class="game-card">
-                    <img src="https://images.unsplash.com/photo-1509198397868-475647b2a044?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Tic Tac Toe">
-                    <div class="game-card-content">
-                        <h3>Tic Tac Toe</h3>
-                        <p>The classic strategy game. Play against the computer or a friend in this timeless game.</p>
-                        <a href="tictactoe.html" class="btn">Play Now</a>
-                    </div>
-                </div>
-                
-                <!-- Game Card 3 -->
-                <div class="game-card">
-                    <img src="https://images.unsplash.com/photo-1584992236310-6edddc08acff?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Memory Game">
-                    <div class="game-card-content">
-                        <h3>Memory Match</h3>
-                        <p>Test your memory with this fun card matching game. Find all pairs to win!</p>
-                        <a href="memory.html" class="btn">Play Now</a>
-                    </div>
-                </div>
-                
-                <!-- Game Card 4 -->
-                <div class="game-card">
-                    <img src="https://images.unsplash.com/photo-1535223289827-42f1e9919769?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="2048 Game">
-                    <div class="game-card-content">
-                        <h3>2048 Puzzle</h3>
-                        <p>Slide numbered tiles to combine them and reach the 2048 tile in this addictive puzzle game.</p>
-                        <a href="2048.html" class="btn">Play Now</a>
-                    </div>
+            </div>
+            
+            <!-- 2048 Game -->
+            <div class="game-card">
+                <img src="https://via.placeholder.com/300x180?text=2048+Game" alt="2048 Game">
+                <div class="game-info">
+                    <h3>2048 Puzzle</h3>
+                    <p>Slide numbered tiles to combine them and reach the 2048 tile.</p>
+                    <a href="2048.html" class="play-btn">Play Now</a>
                 </div>
             </div>
         </div>
-    </section>
-
-    <!-- Categories Section -->
-    <section class="categories" id="categories">
-        <div class="container">
-            <div class="section-title">
-                <h2>Game Categories</h2>
-                <p>Browse games by category to find what you're looking for</p>
-            </div>
-            <div class="category-tags">
-                <div class="category-tag active">All Games</div>
-                <div class="category-tag">Puzzle</div>
-                <div class="category-tag">Arcade</div>
-                <div class="category-tag">Strategy</div>
-                <div class="category-tag">Classic</div>
-                <div class="category-tag">Adventure</div>
-                <div class="category-tag">Card</div>
-                <div class="category-tag">Multiplayer</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Features Section -->
-    <section class="features" id="features">
-        <div class="container">
-            <div class="section-title">
-                <h2>Why Choose GameHub?</h2>
-                <p>We offer the best gaming experience with these amazing features</p>
-            </div>
-            <div class="features-grid">
-                <!-- Feature 1 -->
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-desktop"></i>
-                    </div>
-                    <h3>No Downloads</h3>
-                    <p>All our games run directly in your browser. No need to download or install anything.</p>
-                </div>
-                
-                <!-- Feature 2 -->
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-mobile-alt"></i>
-                    </div>
-                    <h3>Mobile Friendly</h3>
-                    <p>Play on any device - desktop, tablet, or mobile. Our games adapt to your screen size.</p>
-                </div>
-                
-                <!-- Feature 3 -->
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-user-friends"></i>
-                    </div>
-                    <h3>Free Forever</h3>
-                    <p>All our games are completely free to play with no hidden charges or subscriptions.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer id="contact">
-        <div class="container">
-            <div class="footer-container">
-                <!-- Column 1 -->
-                <div class="footer-column">
-                    <h3>GameHub</h3>
-                    <p>Your ultimate destination for free online games. Play, enjoy, and have fun!</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-youtube"></i></a>
-                    </div>
-                </div>
-                
-                <!-- Column 2 -->
-                <div class="footer-column">
-                    <h3>Quick Links</h3>
-                    <ul>
-                        <li><a href="#home">Home</a></li>
-                        <li><a href="#games">Games</a></li>
-                        <li><a href="#categories">Categories</a></li>
-                        <li><a href="#features">Features</a></li>
-                    </ul>
-                </div>
-                
-                <!-- Column 3 -->
-                <div class="footer-column">
-                    <h3>Help</h3>
-                    <ul>
-                        <li><a href="#">FAQs</a></li>
-                        <li><a href="#">Contact Us</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="#">Terms of Service</a></li>
-                    </ul>
-                </div>
-                
-                <!-- Column 4 -->
-                <div class="footer-column">
-                    <h3>Contact</h3>
-                    <ul>
-                        <li><i class="fas fa-envelope"></i> contact@gamehub.com</li>
-                        <li><i class="fas fa-phone"></i> +1 (555) 123-4567</li>
-                        <li><i class="fas fa-map-marker-alt"></i> 123 Gaming St, Game City</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="copyright">
-                <p>&copy; 2023 GameHub. All Rights Reserved.</p>
-            </div>
-        </div>
+    </div>
+    
+    <footer>
+        <p>&copy; 2023 My Game Collection. All games are free to play.</p>
     </footer>
-
+    
     <script>
-        // Mobile Menu Toggle
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const mainNav = document.getElementById('mainNav');
-
-        mobileMenuBtn.addEventListener('click', () => {
-            mainNav.classList.toggle('active');
-        });
-
-        // Close mobile menu when clicking on a link
-        const navLinks = document.querySelectorAll('nav ul li a');
-        navLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                mainNav.classList.remove('active');
-            });
-        });
-
-        // Category filter functionality
-        const categoryTags = document.querySelectorAll('.category-tag');
-        categoryTags.forEach(tag => {
-            tag.addEventListener('click', () => {
-                // Remove active class from all tags
-                categoryTags.forEach(t => t.classList.remove('active'));
-                // Add active class to clicked tag
-                tag.classList.add('active');
-                
-                // Here you would normally filter games based on category
-                // For this demo, we'll just log the selected category
-                console.log(`Filtering by: ${tag.textContent}`);
-            });
-        });
-
-        // Smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                const targetId = this.getAttribute('href');
-                if (targetId === '#') return;
-                
-                const targetElement = document.querySelector(targetId);
-                if (targetElement) {
-                    window.scrollTo({
-                        top: targetElement.offsetTop - 70,
-                        behavior: 'smooth'
-                    });
+        // Simple JavaScript for any future functionality
+        console.log("Game hub loaded!");
+        
+        // You can add more interactive features here later
+        document.querySelectorAll('.game-card').forEach(card => {
+            card.addEventListener('click', (e) => {
+                if (!e.target.classList.contains('play-btn')) {
+                    const link = card.querySelector('.play-btn');
+                    window.location.href = link.href;
                 }
             });
         });
